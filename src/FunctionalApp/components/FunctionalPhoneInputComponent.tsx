@@ -1,6 +1,5 @@
-import { ChangeEventHandler, Dispatch, SetStateAction, useRef } from 'react';
-
-export type PhoneInputState = [string, string, string, string];
+import { ChangeEventHandler, Dispatch, Fragment, SetStateAction, useRef } from 'react';
+import { PhoneInputState } from '../../types';
 
 export function FunctionalPhoneInput({
   phoneInputState,
@@ -16,7 +15,7 @@ export function FunctionalPhoneInput({
   const refs = [ref0, ref1, ref2, ref3];
 
   const createOnChangeHandler =
-    (index: 0 | 1 | 2 | 3): ChangeEventHandler<HTMLInputElement> =>
+    (index: number): ChangeEventHandler<HTMLInputElement> =>
     (e) => {
       const lengths = [2, 2, 2, 1];
       const currentMaxLength = lengths[index];
@@ -48,47 +47,33 @@ export function FunctionalPhoneInput({
       setPhoneInputState(newState);
     };
 
+  const inputs = [
+    { id: 'phone-input-1', placeholder: '55', maxLength: 2 },
+    { id: 'phone-input-2', placeholder: '55', maxLength: 2 },
+    { id: 'phone-input-3', placeholder: '55', maxLength: 2 },
+    { id: 'phone-input-4', placeholder: '5', maxLength: 1 },
+  ];
+
   return (
-    <>
-      <input
-        type='text'
-        id='phone-input-1'
-        placeholder='55'
-        ref={ref0}
-        value={phoneInputState[0]}
-        onChange={createOnChangeHandler(0)}
-        maxLength={2}
-      />
-      -
-      <input
-        type='text'
-        id='phone-input-2'
-        placeholder='55'
-        ref={ref1}
-        value={phoneInputState[1]}
-        onChange={createOnChangeHandler(1)}
-        maxLength={2}
-      />
-      -
-      <input
-        type='text'
-        id='phone-input-3'
-        placeholder='55'
-        ref={ref2}
-        value={phoneInputState[2]}
-        onChange={createOnChangeHandler(2)}
-        maxLength={2}
-      />
-      -
-      <input
-        type='text'
-        id='phone-input-4'
-        placeholder='5'
-        ref={ref3}
-        value={phoneInputState[3]}
-        onChange={createOnChangeHandler(3)}
-        maxLength={1}
-      />
-    </>
+    <div className='input-wrap'>
+      <label htmlFor='phone'>Phone:</label>
+      <div id='phone-input-wrap'>
+        {inputs.map((input, index) => (
+          <Fragment key={input.id}>
+            <input
+              key={input.id}
+              type='text'
+              id={input.id}
+              placeholder={input.placeholder}
+              ref={refs[index]}
+              value={phoneInputState[index]}
+              onChange={createOnChangeHandler(index)}
+              maxLength={input.maxLength}
+            />
+            {index < inputs.length - 1 && '-'}
+          </Fragment>
+        ))}
+      </div>
+    </div>
   );
 }

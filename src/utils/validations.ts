@@ -1,5 +1,7 @@
 import { allCities } from './all-cities';
 
+const StartWithTwoCharactersNoNumbers = /^[A-Za-z]{2}[A-Za-z\s.]*$/;
+
 export function isEmailValid(emailAddress: string) {
   // eslint-disable-next-line no-useless-escape
   const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -7,11 +9,15 @@ export function isEmailValid(emailAddress: string) {
 }
 
 export function isFirstNameInputValid(firstName: string) {
-  return firstName.length > 2;
+  if (firstName.length > 1 && StartWithTwoCharactersNoNumbers.test(firstName)) {
+    return true;
+  }
 }
 
 export function isLastNameInputValid(lastName: string) {
-  return lastName.length > 2;
+  if (lastName.length > 1 && StartWithTwoCharactersNoNumbers.test(lastName)) {
+    return true;
+  }
 }
 
 export function isCityValid(city: string) {
