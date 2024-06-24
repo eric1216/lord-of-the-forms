@@ -1,8 +1,9 @@
 import { PhoneInputState } from '../types';
 
-export const capitalize = () => {
+export const capitalize = (string: string) => {
   // todo: build this function
   // `capitalize("jOn")` should output `"Jon"`
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 };
 
 export const formatPhoneNumber = (phoneArray: PhoneInputState) => {

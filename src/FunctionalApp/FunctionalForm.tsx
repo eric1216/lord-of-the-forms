@@ -10,7 +10,7 @@ import {
 import { FunctionalPhoneInput } from './components/FunctionalPhoneInputComponent';
 import { FunctionalTextInput } from './components/FunctionalTextInputComponent';
 import { PhoneInputState, UserInformation } from '../types';
-import { formatPhoneNumber } from '../utils/transformations';
+import { capitalize, formatPhoneNumber } from '../utils/transformations';
 
 const firstNameErrorMessage = 'First name must be at least 2 characters long';
 const lastNameErrorMessage = 'Last name must be at least 2 characters long';
@@ -53,8 +53,8 @@ export const FunctionalForm = ({ setUserData }: { setUserData: Dispatch<SetState
       isPhoneInputValid(phoneInputState)
     ) {
       setUserData({
-        firstName: firstNameInputState,
-        lastName: lastNameInputState,
+        firstName: capitalize(firstNameInputState),
+        lastName: capitalize(lastNameInputState),
         email: emailInputState,
         city: cityInputState,
         phone: formatPhoneNumber(phoneInputState),
