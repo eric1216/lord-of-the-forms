@@ -1,6 +1,13 @@
 import { ChangeEventHandler, Dispatch, Fragment, SetStateAction, useRef } from 'react';
 import { PhoneInputState } from '../../types';
 
+const phoneInputs = [
+  { id: 'phone-input-1', placeholder: '55', maxLength: 2 },
+  { id: 'phone-input-2', placeholder: '55', maxLength: 2 },
+  { id: 'phone-input-3', placeholder: '55', maxLength: 2 },
+  { id: 'phone-input-4', placeholder: '5', maxLength: 1 },
+];
+
 export function FunctionalPhoneInput({
   phoneInputState,
   setPhoneInputState,
@@ -47,18 +54,11 @@ export function FunctionalPhoneInput({
       setPhoneInputState(newState);
     };
 
-  const inputs = [
-    { id: 'phone-input-1', placeholder: '55', maxLength: 2 },
-    { id: 'phone-input-2', placeholder: '55', maxLength: 2 },
-    { id: 'phone-input-3', placeholder: '55', maxLength: 2 },
-    { id: 'phone-input-4', placeholder: '5', maxLength: 1 },
-  ];
-
   return (
     <div className='input-wrap'>
       <label htmlFor='phone'>Phone:</label>
       <div id='phone-input-wrap'>
-        {inputs.map((input, index) => (
+        {phoneInputs.map((input, index) => (
           <Fragment key={input.id}>
             <input
               key={input.id}
@@ -70,7 +70,7 @@ export function FunctionalPhoneInput({
               onChange={createOnChangeHandler(index)}
               maxLength={input.maxLength}
             />
-            {index < inputs.length - 1 && '-'}
+            {index < phoneInputs.length - 1 && '-'}
           </Fragment>
         ))}
       </div>
