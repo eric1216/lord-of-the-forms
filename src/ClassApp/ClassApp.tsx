@@ -4,14 +4,6 @@ import { UserInformation } from '../types';
 import { ProfileInformation } from '../ProfileInformation';
 type State = { userInformation: UserInformation | null };
 
-const defaultUser: UserInformation = {
-  firstName: 'Default',
-  lastName: 'Default',
-  city: 'Hobbiton',
-  email: 'default@default.com',
-  phone: '1234567',
-};
-
 export class ClassApp extends Component<Record<string, never>, State> {
   state = { userInformation: null };
 
