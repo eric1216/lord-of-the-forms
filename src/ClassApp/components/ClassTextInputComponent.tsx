@@ -1,11 +1,7 @@
-import { Component, ComponentProps } from 'react';
+import { Component } from 'react';
+import { TextComponentPropTypes } from '../../types';
 
-type ClassTextPropTypes = {
-  labelText: string;
-  inputProps: ComponentProps<'input'>;
-};
-
-export class ClassTextInput extends Component<ClassTextPropTypes> {
+export class ClassTextInput extends Component<TextComponentPropTypes> {
   render() {
     const { labelText, inputProps } = this.props;
     return (
