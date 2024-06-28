@@ -1,7 +1,7 @@
 import { ChangeEventHandler, Component, createRef, Fragment } from 'react';
 import { PhoneInputState } from '../../types';
 
-type ClassPhoneInputState = {
+type ClassPhoneInputType = {
   phoneInputState: PhoneInputState;
   updatePhoneState: (newPhoneState: PhoneInputState) => void;
 };
@@ -13,7 +13,7 @@ const phoneInputs = [
   { id: 'phone-input-4', placeholder: '5', maxLength: 1 },
 ];
 
-export class ClassPhoneInput extends Component<ClassPhoneInputState> {
+export class ClassPhoneInput extends Component<ClassPhoneInputType> {
   ref0 = createRef<HTMLInputElement>();
   ref1 = createRef<HTMLInputElement>();
   ref2 = createRef<HTMLInputElement>();

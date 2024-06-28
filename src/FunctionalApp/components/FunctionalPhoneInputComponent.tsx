@@ -1,6 +1,11 @@
 import { ChangeEventHandler, Dispatch, Fragment, SetStateAction, useRef } from 'react';
 import { PhoneInputState } from '../../types';
 
+type FunctionalPhoneInputType = {
+  phoneInputState: PhoneInputState;
+  setPhoneInputState: Dispatch<SetStateAction<PhoneInputState>>;
+};
+
 const phoneInputs = [
   { id: 'phone-input-1', placeholder: '55', maxLength: 2 },
   { id: 'phone-input-2', placeholder: '55', maxLength: 2 },
@@ -8,13 +13,7 @@ const phoneInputs = [
   { id: 'phone-input-4', placeholder: '5', maxLength: 1 },
 ];
 
-export function FunctionalPhoneInput({
-  phoneInputState,
-  setPhoneInputState,
-}: {
-  phoneInputState: PhoneInputState;
-  setPhoneInputState: Dispatch<SetStateAction<PhoneInputState>>;
-}) {
+export function FunctionalPhoneInput({ phoneInputState, setPhoneInputState }: FunctionalPhoneInputType) {
   const ref0 = useRef<HTMLInputElement>(null);
   const ref1 = useRef<HTMLInputElement>(null);
   const ref2 = useRef<HTMLInputElement>(null);
