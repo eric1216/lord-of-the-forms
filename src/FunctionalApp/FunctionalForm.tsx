@@ -1,5 +1,5 @@
 import { ErrorMessage } from '../ErrorMessage';
-import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
+import { Dispatch, FormEvent, SetStateAction, useState, ChangeEventHandler } from 'react';
 import {
   isCityValid,
   isEmailValid,
@@ -18,7 +18,11 @@ const emailErrorMessage = 'Email is Invalid';
 const cityErrorMessage = 'State is Invalid';
 const phoneNumberErrorMessage = 'Invalid Phone Number';
 
-export const FunctionalForm = ({ setUserData }: { setUserData: Dispatch<SetStateAction<UserInformation | null>> }) => {
+type FunctionalFormPropTypes = {
+  setUserData: Dispatch<SetStateAction<UserInformation | null>>;
+};
+
+export const FunctionalForm = ({ setUserData }: FunctionalFormPropTypes) => {
   // state
   const [firstNameInputState, setFirstNameInputState] = useState('');
   const [lastNameInputState, setLastNameInputState] = useState('');
@@ -40,18 +44,24 @@ export const FunctionalForm = ({ setUserData }: { setUserData: Dispatch<SetState
     setEmailInputState('');
     setCityInputState('');
     setPhoneInputState(['', '', '', '']);
-    setIsSubmitted(false);
   };
+
+  const allInputsValid = () =>
+    isFirstNameInputValid(firstNameInputState) &&
+    isLastNameInputValid(lastNameInputState) &&
+    isEmailValid(emailInputState) &&
+    isCityValid(cityInputState) &&
+    isPhoneInputValid(phoneInputState);
+
+  const handleInputChange =
+    (setState: Dispatch<SetStateAction<string>>): ChangeEventHandler<HTMLInputElement> =>
+    (e) => {
+      setState(e.target.value);
+    };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (
-      isFirstNameInputValid(firstNameInputState) &&
-      isLastNameInputValid(lastNameInputState) &&
-      isEmailValid(emailInputState) &&
-      isCityValid(cityInputState) &&
-      isPhoneInputValid(phoneInputState)
-    ) {
+    if (allInputsValid()) {
       setUserData({
         firstName: capitalize(firstNameInputState),
         lastName: capitalize(lastNameInputState),
@@ -60,6 +70,7 @@ export const FunctionalForm = ({ setUserData }: { setUserData: Dispatch<SetState
         phone: formatPhoneNumber(phoneInputState),
       });
       clearForm();
+      setIsSubmitted(false);
     } else {
       alert('bad input data');
       setIsSubmitted(true);
@@ -78,9 +89,7 @@ export const FunctionalForm = ({ setUserData }: { setUserData: Dispatch<SetState
         inputProps={{
           placeholder: 'Bilbo',
           value: firstNameInputState,
-          onChange: (e) => {
-            setFirstNameInputState(e.target.value);
-          },
+          onChange: handleInputChange(setFirstNameInputState),
         }}
       />
       {shouldShowFirstNameError && <ErrorMessage message={firstNameErrorMessage} show={true} />}
@@ -91,9 +100,7 @@ export const FunctionalForm = ({ setUserData }: { setUserData: Dispatch<SetState
         inputProps={{
           placeholder: 'Baggins',
           value: lastNameInputState,
-          onChange: (e) => {
-            setLastNameInputState(e.target.value);
-          },
+          onChange: handleInputChange(setLastNameInputState),
         }}
       />
       {shouldShowLastNameError && <ErrorMessage message={lastNameErrorMessage} show={true} />}
@@ -104,9 +111,7 @@ export const FunctionalForm = ({ setUserData }: { setUserData: Dispatch<SetState
         inputProps={{
           placeholder: 'bilbo-baggins@adventurehobbits.net',
           value: emailInputState,
-          onChange: (e) => {
-            setEmailInputState(e.target.value);
-          },
+          onChange: handleInputChange(setEmailInputState),
         }}
       />
       {shouldShowEmailError && <ErrorMessage message={emailErrorMessage} show={true} />}
@@ -118,9 +123,7 @@ export const FunctionalForm = ({ setUserData }: { setUserData: Dispatch<SetState
           list: 'cities',
           placeholder: 'Hobbiton',
           value: cityInputState,
-          onChange: (e) => {
-            setCityInputState(e.target.value);
-          },
+          onChange: handleInputChange(setCityInputState),
         }}
       />
       {shouldShowCityError && <ErrorMessage message={cityErrorMessage} show={true} />}

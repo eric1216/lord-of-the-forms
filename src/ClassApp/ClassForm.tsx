@@ -1,4 +1,4 @@
-import { Component, FormEvent } from 'react';
+import { Component, FormEvent, ChangeEventHandler } from 'react';
 import { ErrorMessage } from '../ErrorMessage';
 import { PhoneInputState, UserInformation } from '../types';
 import {
@@ -29,7 +29,6 @@ export class ClassForm extends Component<ClassFormPropTypes> {
     emailInputState: '',
     cityInputState: '',
     phoneInputState: ['', '', '', ''] as PhoneInputState,
-
     isSubmitted: false,
   };
 
@@ -44,20 +43,26 @@ export class ClassForm extends Component<ClassFormPropTypes> {
       emailInputState: '',
       cityInputState: '',
       phoneInputState: ['', '', '', ''],
-
       isSubmitted: false,
     });
   };
 
+  allInputsValid = () =>
+    isFirstNameInputValid(this.state.firstNameInputState) &&
+    isLastNameInputValid(this.state.lastNameInputState) &&
+    isEmailValid(this.state.emailInputState) &&
+    isCityValid(this.state.cityInputState) &&
+    isPhoneInputValid(this.state.phoneInputState);
+
+  handleInputChange =
+    (stateName: string): ChangeEventHandler<HTMLInputElement> =>
+    (e) => {
+      this.setState({ [stateName]: e.target.value });
+    };
+
   handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (
-      isFirstNameInputValid(this.state.firstNameInputState) &&
-      isLastNameInputValid(this.state.lastNameInputState) &&
-      isEmailValid(this.state.emailInputState) &&
-      isCityValid(this.state.cityInputState) &&
-      isPhoneInputValid(this.state.phoneInputState)
-    ) {
+    if (this.allInputsValid()) {
       this.props.updateUserInformation({
         firstName: capitalize(this.state.firstNameInputState),
         lastName: capitalize(this.state.lastNameInputState),
@@ -66,6 +71,7 @@ export class ClassForm extends Component<ClassFormPropTypes> {
         phone: formatPhoneNumber(this.state.phoneInputState),
       });
       this.clearForm();
+      this.setState({ isSubmitted: false });
     } else {
       alert('bad input data');
       this.setState({ isSubmitted: true });
@@ -94,9 +100,7 @@ export class ClassForm extends Component<ClassFormPropTypes> {
           inputProps={{
             placeholder: 'Bilbo',
             value: firstNameInputState,
-            onChange: (e) => {
-              this.setState({ firstNameInputState: e.target.value });
-            },
+            onChange: this.handleInputChange('firstNameInputState'),
           }}
         />
         {shouldShowFirstNameError && <ErrorMessage message={firstNameErrorMessage} show={true} />}
@@ -107,9 +111,7 @@ export class ClassForm extends Component<ClassFormPropTypes> {
           inputProps={{
             placeholder: 'Baggins',
             value: lastNameInputState,
-            onChange: (e) => {
-              this.setState({ lastNameInputState: e.target.value });
-            },
+            onChange: this.handleInputChange('lastNameInputState'),
           }}
         />
         {shouldShowLastNameError && <ErrorMessage message={lastNameErrorMessage} show={true} />}
@@ -120,23 +122,19 @@ export class ClassForm extends Component<ClassFormPropTypes> {
           inputProps={{
             placeholder: 'bilbo-baggins@adventurehobbits.net',
             value: emailInputState,
-            onChange: (e) => {
-              this.setState({ emailInputState: e.target.value });
-            },
+            onChange: this.handleInputChange('emailInputState'),
           }}
         />
         {shouldShowEmailError && <ErrorMessage message={emailErrorMessage} show={true} />}
 
         {/* City Input */}
         <ClassTextInput
-          labelText='Email'
+          labelText='City'
           inputProps={{
             list: 'cities',
             placeholder: 'Hobbiton',
             value: cityInputState,
-            onChange: (e) => {
-              this.setState({ cityInputState: e.target.value });
-            },
+            onChange: this.handleInputChange('cityInputState'),
           }}
         />
         {shouldShowCityError && <ErrorMessage message={cityErrorMessage} show={true} />}
