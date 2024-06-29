@@ -1,3 +1,4 @@
+import { PhoneInputState } from '../types';
 import { allCities } from './all-cities';
 
 const lettersOnly = /^[a-zA-Z]+$/;
@@ -24,6 +25,6 @@ export function isCityValid(city: string) {
   return allCities.includes(city);
 }
 
-export function isPhoneInputValid(phoneNumber: [string, string, string, string]) {
+export function isPhoneInputValid(phoneNumber: PhoneInputState) {
   return phoneNumber.reduce((acc, str) => acc + str.length, 0) === 7;
 }
