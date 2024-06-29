@@ -22,7 +22,8 @@ export function isLastNameInputValid(lastName: string) {
 }
 
 export function isCityValid(city: string) {
-  return allCities.includes(city);
+  const formattedCity = city.trim().toLowerCase();
+  return allCities.map((city) => city.toLowerCase()).includes(formattedCity);
 }
 
 export function isPhoneInputValid(phoneNumber: PhoneInputState) {

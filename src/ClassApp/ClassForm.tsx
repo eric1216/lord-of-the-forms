@@ -67,7 +67,7 @@ export class ClassForm extends Component<ClassFormPropTypes> {
         firstName: capitalize(this.state.firstNameInputState),
         lastName: capitalize(this.state.lastNameInputState),
         email: this.state.emailInputState,
-        city: this.state.cityInputState,
+        city: capitalize(this.state.cityInputState),
         phone: formatPhoneNumber(this.state.phoneInputState),
       });
       this.clearForm();

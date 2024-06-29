@@ -66,7 +66,7 @@ export const FunctionalForm = ({ setUserData }: FunctionalFormPropTypes) => {
         firstName: capitalize(firstNameInputState),
         lastName: capitalize(lastNameInputState),
         email: emailInputState,
-        city: cityInputState,
+        city: capitalize(cityInputState),
         phone: formatPhoneNumber(phoneInputState),
       });
       clearForm();
