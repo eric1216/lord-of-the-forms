@@ -13,4 +13,6 @@ export type PhoneInputState = [string, string, string, string];
 export type TextComponentPropTypes = {
   labelText: string;
   inputProps: ComponentProps<'input'>;
+  errorMessage: string;
+  shouldErrorShow: boolean;
 };

@@ -9,16 +9,8 @@ export function isEmailValid(emailAddress: string) {
   return !!emailAddress.match(regex);
 }
 
-export function isFirstNameInputValid(firstName: string) {
-  if (firstName.length > 1 && lettersOnly.test(firstName)) {
-    return true;
-  }
-}
-
-export function isLastNameInputValid(lastName: string) {
-  if (lastName.length > 1 && lettersOnly.test(lastName)) {
-    return true;
-  }
+export function isFirstAndLastNameInputValid(name: string) {
+  return name.length > 1 && lettersOnly.test(name);
 }
 
 export function isCityValid(city: string) {
@@ -27,5 +19,5 @@ export function isCityValid(city: string) {
 }
 
 export function isPhoneInputValid(phoneNumber: PhoneInputState) {
-  return phoneNumber.reduce((acc, str) => acc + str.length, 0) === 7;
+  return phoneNumber.join('').length === 7;
 }

@@ -1,9 +1,12 @@
 import { ChangeEventHandler, Component, createRef, Fragment } from 'react';
+import { ErrorMessage } from '../../ErrorMessage';
 import { PhoneInputState } from '../../types';
 
 type ClassPhoneInputType = {
   phoneInputState: PhoneInputState;
   updatePhoneState: (newPhoneState: PhoneInputState) => void;
+  errorMessage: string;
+  shouldErrorShow: boolean;
 };
 
 const phoneInputs = [
@@ -54,28 +57,31 @@ export class ClassPhoneInput extends Component<ClassPhoneInputType> {
     };
 
   render() {
-    const { phoneInputState } = this.props;
+    const { phoneInputState, errorMessage, shouldErrorShow } = this.props;
     return (
-      <div className='input-wrap'>
-        <label htmlFor='phone'>Phone:</label>
-        <div id='phone-input-wrap'>
-          {phoneInputs.map((input, index) => (
-            <Fragment key={input.id}>
-              <input
-                key={input.id}
-                type='text'
-                id={input.id}
-                placeholder={input.placeholder}
-                ref={this.refsArr[index]}
-                value={phoneInputState[index]}
-                onChange={this.createOnChangeHandler(index)}
-                maxLength={input.maxLength}
-              />
-              {index < phoneInputs.length - 1 && '-'}
-            </Fragment>
-          ))}
+      <>
+        <div className='input-wrap'>
+          <label htmlFor='phone'>Phone:</label>
+          <div id='phone-input-wrap'>
+            {phoneInputs.map((input, index) => (
+              <Fragment key={input.id}>
+                <input
+                  key={input.id}
+                  type='text'
+                  id={input.id}
+                  placeholder={input.placeholder}
+                  ref={this.refsArr[index]}
+                  value={phoneInputState[index]}
+                  onChange={this.createOnChangeHandler(index)}
+                  maxLength={input.maxLength}
+                />
+                {index < phoneInputs.length - 1 && '-'}
+              </Fragment>
+            ))}
+          </div>
         </div>
-      </div>
+        <ErrorMessage message={errorMessage} show={shouldErrorShow} />
+      </>
     );
   }
 }

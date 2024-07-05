@@ -1,16 +1,8 @@
-import { ErrorMessage } from '../ErrorMessage';
-import { Dispatch, FormEvent, SetStateAction, useState, ChangeEventHandler } from 'react';
-import {
-  isCityValid,
-  isEmailValid,
-  isFirstNameInputValid,
-  isLastNameInputValid,
-  isPhoneInputValid,
-} from '../utils/validations';
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
+import { isCityValid, isEmailValid, isFirstAndLastNameInputValid, isPhoneInputValid } from '../utils/validations';
 import { FunctionalPhoneInput } from './components/FunctionalPhoneInputComponent';
 import { FunctionalTextInput } from './components/FunctionalTextInputComponent';
 import { PhoneInputState, UserInformation } from '../types';
-import { capitalize, formatPhoneNumber } from '../utils/transformations';
 
 const firstNameErrorMessage = 'First name must be at least 2 characters long';
 const lastNameErrorMessage = 'Last name must be at least 2 characters long';
@@ -32,13 +24,20 @@ export const FunctionalForm = ({ setUserData }: FunctionalFormPropTypes) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   // validations
-  const shouldShowFirstNameError = isSubmitted && !isFirstNameInputValid(firstNameInputState);
-  const shouldShowLastNameError = isSubmitted && !isLastNameInputValid(lastNameInputState);
-  const shouldShowEmailError = isSubmitted && !isEmailValid(emailInputState);
-  const shouldShowCityError = isSubmitted && !isCityValid(cityInputState);
-  const shouldShowPhoneError = isSubmitted && !isPhoneInputValid(phoneInputState);
+  const isFirstNameValueValid = isFirstAndLastNameInputValid(firstNameInputState);
+  const isLastNameValueValid = isFirstAndLastNameInputValid(lastNameInputState);
+  const isEmailValueValid = isEmailValid(emailInputState);
+  const isCityValueValid = isCityValid(cityInputState);
+  const isPhoneValueValid = isPhoneInputValid(phoneInputState);
 
-  const clearForm = () => {
+  // error message handling
+  const shouldShowFirstNameError = isSubmitted && !isFirstNameValueValid;
+  const shouldShowLastNameError = isSubmitted && !isLastNameValueValid;
+  const shouldShowEmailError = isSubmitted && !isEmailValueValid;
+  const shouldShowCityError = isSubmitted && !isCityValueValid;
+  const shouldShowPhoneError = isSubmitted && !isPhoneValueValid;
+
+  const clearStateAndForm = () => {
     setFirstNameInputState('');
     setLastNameInputState('');
     setEmailInputState('');
@@ -47,29 +46,19 @@ export const FunctionalForm = ({ setUserData }: FunctionalFormPropTypes) => {
   };
 
   const allInputsValid = () =>
-    isFirstNameInputValid(firstNameInputState) &&
-    isLastNameInputValid(lastNameInputState) &&
-    isEmailValid(emailInputState) &&
-    isCityValid(cityInputState) &&
-    isPhoneInputValid(phoneInputState);
-
-  const handleInputChange =
-    (setState: Dispatch<SetStateAction<string>>): ChangeEventHandler<HTMLInputElement> =>
-    (e) => {
-      setState(e.target.value);
-    };
+    isFirstNameValueValid && isLastNameValueValid && isEmailValueValid && isCityValueValid && isPhoneValueValid;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (allInputsValid()) {
       setUserData({
-        firstName: capitalize(firstNameInputState),
-        lastName: capitalize(lastNameInputState),
+        firstName: firstNameInputState,
+        lastName: lastNameInputState,
         email: emailInputState,
-        city: capitalize(cityInputState),
-        phone: formatPhoneNumber(phoneInputState),
+        city: cityInputState,
+        phone: phoneInputState.join(''),
       });
-      clearForm();
+      clearStateAndForm();
       setIsSubmitted(false);
     } else {
       alert('bad input data');
@@ -89,10 +78,11 @@ export const FunctionalForm = ({ setUserData }: FunctionalFormPropTypes) => {
         inputProps={{
           placeholder: 'Bilbo',
           value: firstNameInputState,
-          onChange: handleInputChange(setFirstNameInputState),
+          onChange: (e) => setFirstNameInputState(e.target.value),
         }}
+        errorMessage={firstNameErrorMessage}
+        shouldErrorShow={shouldShowFirstNameError}
       />
-      {shouldShowFirstNameError && <ErrorMessage message={firstNameErrorMessage} show={true} />}
 
       {/* last name input */}
       <FunctionalTextInput
@@ -100,10 +90,11 @@ export const FunctionalForm = ({ setUserData }: FunctionalFormPropTypes) => {
         inputProps={{
           placeholder: 'Baggins',
           value: lastNameInputState,
-          onChange: handleInputChange(setLastNameInputState),
+          onChange: (e) => setLastNameInputState(e.target.value),
         }}
+        errorMessage={lastNameErrorMessage}
+        shouldErrorShow={shouldShowLastNameError}
       />
-      {shouldShowLastNameError && <ErrorMessage message={lastNameErrorMessage} show={true} />}
 
       {/* Email Input */}
       <FunctionalTextInput
@@ -111,10 +102,11 @@ export const FunctionalForm = ({ setUserData }: FunctionalFormPropTypes) => {
         inputProps={{
           placeholder: 'bilbo-baggins@adventurehobbits.net',
           value: emailInputState,
-          onChange: handleInputChange(setEmailInputState),
+          onChange: (e) => setEmailInputState(e.target.value),
         }}
+        errorMessage={emailErrorMessage}
+        shouldErrorShow={shouldShowEmailError}
       />
-      {shouldShowEmailError && <ErrorMessage message={emailErrorMessage} show={true} />}
 
       {/* City Input */}
       <FunctionalTextInput
@@ -123,14 +115,19 @@ export const FunctionalForm = ({ setUserData }: FunctionalFormPropTypes) => {
           list: 'cities',
           placeholder: 'Hobbiton',
           value: cityInputState,
-          onChange: handleInputChange(setCityInputState),
+          onChange: (e) => setCityInputState(e.target.value),
         }}
+        errorMessage={cityErrorMessage}
+        shouldErrorShow={shouldShowCityError}
       />
-      {shouldShowCityError && <ErrorMessage message={cityErrorMessage} show={true} />}
 
       {/* Phone Input */}
-      <FunctionalPhoneInput phoneInputState={phoneInputState} setPhoneInputState={setPhoneInputState} />
-      {shouldShowPhoneError && <ErrorMessage message={phoneNumberErrorMessage} show={true} />}
+      <FunctionalPhoneInput
+        phoneInputState={phoneInputState}
+        setPhoneInputState={setPhoneInputState}
+        errorMessage={phoneNumberErrorMessage}
+        shouldErrorShow={shouldShowPhoneError}
+      />
 
       <input type='submit' value='Submit' />
     </form>
