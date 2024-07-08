@@ -10,13 +10,8 @@ export const capitalize = (string: string) => {
 export const formatPhoneNumber = (phoneString: string) => {
   // todo: build this function
   // `formatPhoneNumber("1234567")` should be `"12-34-56-7"`
-  return (
-    phoneString.substring(0, 2) +
-    '-' +
-    phoneString.substring(2, 4) +
-    '-' +
-    phoneString.substring(4, 6) +
-    '-' +
-    phoneString.substring(6)
-  );
+  return phoneString.split('').reduce((acc, val, index) => {
+    const prefix = index !== 0 && index % 2 === 0 ? '-' : '';
+    return (acc += `${prefix}${val}`);
+  }, '');
 };
