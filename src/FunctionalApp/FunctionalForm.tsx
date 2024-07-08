@@ -48,16 +48,18 @@ export const FunctionalForm = ({ setUserData }: FunctionalFormPropTypes) => {
   const allInputsValid = () =>
     isFirstNameValueValid && isLastNameValueValid && isEmailValueValid && isCityValueValid && isPhoneValueValid;
 
+  const user = {
+    firstName: firstNameInputState,
+    lastName: lastNameInputState,
+    email: emailInputState,
+    city: cityInputState,
+    phone: phoneInputState.join(''),
+  };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (allInputsValid()) {
-      setUserData({
-        firstName: firstNameInputState,
-        lastName: lastNameInputState,
-        email: emailInputState,
-        city: cityInputState,
-        phone: phoneInputState.join(''),
-      });
+      setUserData(user);
       clearStateAndForm();
       setIsSubmitted(false);
     } else {

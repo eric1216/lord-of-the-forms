@@ -14,35 +14,32 @@ type ClassFormPropTypes = {
   updateUserInformation: (newUserInformation: UserInformation | null) => void;
 };
 
+const defaultUserObject = {
+  firstNameInputState: '',
+  lastNameInputState: '',
+  emailInputState: '',
+  cityInputState: '',
+  phoneInputState: ['', '', '', ''] as PhoneInputState,
+  isSubmitted: false,
+};
+
 export class ClassForm extends Component<ClassFormPropTypes> {
   state = {
-    firstNameInputState: '',
-    lastNameInputState: '',
-    emailInputState: '',
-    cityInputState: '',
-    phoneInputState: ['', '', '', ''] as PhoneInputState,
-    isSubmitted: false,
+    defaultUserObject,
   };
 
-  isFirstNameValueValid = () => isFirstAndLastNameInputValid(this.state.firstNameInputState);
-  isLastNameValueValid = () => isFirstAndLastNameInputValid(this.state.lastNameInputState);
-  isEmailValueValid = () => isEmailValid(this.state.emailInputState);
-  isCityValueValid = () => isCityValid(this.state.cityInputState);
-  isPhoneValueValid = () => isPhoneInputValid(this.state.phoneInputState);
+  isFirstNameValueValid = () => isFirstAndLastNameInputValid(this.state.defaultUserObject.firstNameInputState);
+  isLastNameValueValid = () => isFirstAndLastNameInputValid(this.state.defaultUserObject.lastNameInputState);
+  isEmailValueValid = () => isEmailValid(this.state.defaultUserObject.emailInputState);
+  isCityValueValid = () => isCityValid(this.state.defaultUserObject.cityInputState);
+  isPhoneValueValid = () => isPhoneInputValid(this.state.defaultUserObject.phoneInputState);
 
   updatePhoneState = (newPhoneState: PhoneInputState) => {
     this.setState({ phoneInputState: newPhoneState });
   };
 
   clearStateAndForm = () => {
-    this.setState({
-      firstNameInputState: '',
-      lastNameInputState: '',
-      emailInputState: '',
-      cityInputState: '',
-      phoneInputState: ['', '', '', ''],
-      isSubmitted: false,
-    });
+    this.setState(defaultUserObject);
   };
 
   allInputsValid = () =>
@@ -52,16 +49,18 @@ export class ClassForm extends Component<ClassFormPropTypes> {
     this.isCityValueValid() &&
     this.isPhoneValueValid();
 
+  setUserData = () => ({
+    firstName: this.state.defaultUserObject.firstNameInputState,
+    lastName: this.state.defaultUserObject.lastNameInputState,
+    email: this.state.defaultUserObject.emailInputState,
+    city: this.state.defaultUserObject.cityInputState,
+    phone: this.state.defaultUserObject.phoneInputState.join(''),
+  });
+
   handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (this.allInputsValid()) {
-      this.props.updateUserInformation({
-        firstName: this.state.firstNameInputState,
-        lastName: this.state.lastNameInputState,
-        email: this.state.emailInputState,
-        city: this.state.cityInputState,
-        phone: this.state.phoneInputState.join(''),
-      });
+      this.props.updateUserInformation(this.setUserData());
       this.clearStateAndForm();
       this.setState({ isSubmitted: false });
     } else {
@@ -72,7 +71,7 @@ export class ClassForm extends Component<ClassFormPropTypes> {
 
   render() {
     const { firstNameInputState, lastNameInputState, emailInputState, cityInputState, phoneInputState, isSubmitted } =
-      this.state;
+      this.state.defaultUserObject;
 
     const shouldShowFirstNameError = isSubmitted && !this.isFirstNameValueValid();
     const shouldShowLastNameError = isSubmitted && !this.isLastNameValueValid();
